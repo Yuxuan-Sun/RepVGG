@@ -21,6 +21,8 @@ from utils import AverageMeter, accuracy, ProgressMeter
 
 from repvgg import get_RepVGG_func_by_name
 
+import aim
+
 IMAGENET_TRAINSET_SIZE = 1281167
 
 
@@ -128,6 +130,13 @@ def main():
 
 def main_worker(gpu, ngpus_per_node, args):
     global best_acc1
+    global aim_sess = aim.Session()
+    aim_sess.set_params({
+    'num_epochs': args.epochs,
+    'num_classes': 1000,
+    'batch_size': args.batch_size,
+    }, name='hparams')
+
     args.gpu = gpu
 
     if args.gpu is not None:
@@ -324,7 +333,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args, lr_scheduler):
             progress.display(i)
         if i % 1000 == 0:
             print('cur lr: ', lr_scheduler.get_lr()[0])
-
+            aim_sess.track(loss.item(), name='loss', epoch=epoch, subset='train')
+            aim_sess.track(acc1, name='acc1', epoch=epoch, subset='train')
+            aim_sess.track(acc5, name='acc5', epoch=epoch, subset='train')
 
 
 

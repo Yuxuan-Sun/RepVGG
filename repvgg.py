@@ -204,8 +204,12 @@ def create_RepVGG_B3g4(deploy=False):
     return RepVGG(num_blocks=[4, 6, 16, 1], num_classes=1000,
                   width_multiplier=[3, 3, 3, 5], override_groups_map=g4_map, deploy=deploy)
 
+def create_RepVGG_retina(deploy=False):
+    return RepVGG(num_blocks=[2, 4, 14, 1], num_classes=1000,
+                width_multiplier=[2,4,4,4], override_groups_map=g2_map, deploy=deploy)
 
 func_dict = {
+'RepVGG-retina': create_RepVGG_retina,
 'RepVGG-A0': create_RepVGG_A0,
 'RepVGG-A1': create_RepVGG_A1,
 'RepVGG-A2': create_RepVGG_A2,
